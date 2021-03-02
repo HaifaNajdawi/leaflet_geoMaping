@@ -19,20 +19,75 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(myMap);
 
 geoUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-var geojsonMarkerOptions = {
-    radius: 8,
-    fillColor: "#ff7800",
-    color: "#000",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.8
+
+function geojsonMarkerColor(depth) {
+
+    switch (true) {
+        case (depth < 10):
+            return "green";
+
+        case (depth >= 10 && depth < 30):
+            return "yellow";
+
+        case (depth >= 30 && depth < 50):
+            return "light orange";
+
+        case (depth >= 50 && depth < 70):
+            return "dark orange";
+
+        case (depth >= 70 && depth < 90):
+            return "light red";
+
+        case (depth >= 90):
+            return "red";
+    }
+};
+function geojsonMarkerRadius(mag) {
+    switch (true) {
+        case (mag >= -10 && mag < 10):
+            return 10;
+
+        case (mag >= 10 && mag < 30):
+            return 12;
+
+        case (mag >= 30 && mag < 50):
+            return 14;
+
+        case (mag >= 50 && mag < 70):
+            return 16;
+
+        case (mag >= 70 && mag < 90):
+            return 20;
+
+        case (mag >= 90):
+            return 40;
+    }
 };
 
-d3.json(geoUrl,function(data) {
-    L.geoJson(data,{
-    // L.geoJson(data).addTo(myMap);
-    pointToLayer:function(feature,latlng){
-        return L.circleMarker(latlng,geojsonMarkerOptions)}
+
+
+d3.json(geoUrl, function (data) {
+
+    L.geoJson(data, {
+        // L.geoJson(data).addTo(myMap);
+
+        pointToLayer: function (feature, latlng) {
+            x = data.map(u => feature.properties.mag)
+            console.log(x)
+
+
+            return L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: geojsonMarkerColor(feature.geometry.coordinates[2]),
+                color: "white",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8,
+                radius: geojsonMarkerRadius(feature.properties.mag)
+            })
+        }
+
+
     }).addTo(myMap)
 })
 
