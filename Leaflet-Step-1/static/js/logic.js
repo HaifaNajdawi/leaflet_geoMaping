@@ -45,22 +45,22 @@ function geojsonMarkerColor(depth) {
 function geojsonMarkerRadius(mag) {
     switch (true) {
         case (mag <= 0 ):
-            return 10;
+            return 5;
 
         case (mag <= 1):
-            return 12;
+            return 7;
+
+        case ( mag <= 2):
+            return 9;
 
         case ( mag <= 3):
+            return 12;
+
+        case ( mag < 4):
             return 14;
 
-        case ( mag <= 6):
+        case (mag >= 4):
             return 16;
-
-        case ( mag < 8):
-            return 20;
-
-        case (mag >= 8):
-            return 40;
     }
 };
 
@@ -69,18 +69,16 @@ function geojsonMarkerRadius(mag) {
 d3.json(geoUrl, function (data) {
 
     mag=[]
-    for ( var i=0; data.length<i; i++){
+    for ( var i=0;i< data.features.length; i++){
 
-        mag.push((data.features[i].properties.mag))
-};
-
+        mag.push(data.features[i].properties.mag)
+}
+console.log(d3.max(mag))
+console.log(d3.min(mag))
 
     L.geoJson(data, {
         
-
         pointToLayer: function (feature, latlng) {
-
-
             return L.circleMarker(latlng, {
                 radius: 8,
                 fillColor: geojsonMarkerColor(feature.geometry.coordinates[2]),
