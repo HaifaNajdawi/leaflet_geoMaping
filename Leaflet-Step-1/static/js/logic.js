@@ -30,13 +30,13 @@ function geojsonMarkerColor(depth) {
             return "yellow";
 
         case (depth >= 30 && depth < 50):
-            return "light orange";
+            return "orange";
 
         case (depth >= 50 && depth < 70):
-            return "dark orange";
+            return "brown";
 
         case (depth >= 70 && depth < 90):
-            return "light red";
+            return "purple";
 
         case (depth >= 90):
             return "red";
@@ -44,22 +44,22 @@ function geojsonMarkerColor(depth) {
 };
 function geojsonMarkerRadius(mag) {
     switch (true) {
-        case (mag >= -10 && mag < 10):
+        case (mag <= 0 ):
             return 10;
 
-        case (mag >= 10 && mag < 30):
+        case (mag <= 1):
             return 12;
 
-        case (mag >= 30 && mag < 50):
+        case ( mag <= 3):
             return 14;
 
-        case (mag >= 50 && mag < 70):
+        case ( mag <= 6):
             return 16;
 
-        case (mag >= 70 && mag < 90):
+        case ( mag < 8):
             return 20;
 
-        case (mag >= 90):
+        case (mag >= 8):
             return 40;
     }
 };
@@ -68,12 +68,17 @@ function geojsonMarkerRadius(mag) {
 
 d3.json(geoUrl, function (data) {
 
+    mag=[]
+    for ( var i=0; data.length<i; i++){
+
+        mag.push((data.features[i].properties.mag))
+};
+
+
     L.geoJson(data, {
-        // L.geoJson(data).addTo(myMap);
+        
 
         pointToLayer: function (feature, latlng) {
-            x = data.map(u => feature.properties.mag)
-            console.log(x)
 
 
             return L.circleMarker(latlng, {
@@ -84,7 +89,7 @@ d3.json(geoUrl, function (data) {
                 opacity: 1,
                 fillOpacity: 0.8,
                 radius: geojsonMarkerRadius(feature.properties.mag)
-            })
+            }).bindPopup(`<h3> Location: ${feature.properties.place}</h3><br><h4>Magnitude: ${feature.properties.mag}</h4><br><h4>Depth Of Earthquake: ${feature.geometry.coordinates[2]}</h4>`)
         }
 
 
