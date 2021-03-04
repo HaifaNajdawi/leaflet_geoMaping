@@ -44,4 +44,10 @@ html {
   background-size: 18px;
   background-color: rgba(255, 255, 255, 1);
 }
+/* gray scale layer */
+.leaflet-tile-pane {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
 

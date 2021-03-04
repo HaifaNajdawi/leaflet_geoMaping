@@ -9,13 +9,20 @@ var myMap = L.map("mapid", {
 
 // Adding a tile layer (the background map image) to our map
 // We use the addTo method to add objects to our map
-L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+baseLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
     zoomOffset: -1,
     id: "mapbox/streets-v11",
     accessToken: API_KEY
+}).addTo(myMap);
+
+grayLayer= L.tileLayer.grayscale('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
+  maxZoom: 14,
+   minZoom: 2,
+   className :"leaflet-tile-pane"
 }).addTo(myMap);
 
 geoUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
@@ -44,19 +51,19 @@ function geojsonMarkerColor(depth) {
 };
 function geojsonMarkerRadius(mag) {
     switch (true) {
-        case (mag <= 0 ):
+        case (mag <= 0):
             return 5;
 
         case (mag <= 1):
             return 7;
 
-        case ( mag <= 2):
+        case (mag <= 2):
             return 9;
 
-        case ( mag <= 3):
+        case (mag <= 3):
             return 12;
 
-        case ( mag < 4):
+        case (mag < 4):
             return 14;
 
         case (mag >= 4):
@@ -68,16 +75,16 @@ function geojsonMarkerRadius(mag) {
 
 d3.json(geoUrl, function (data) {
 
-    mag=[]
-    for ( var i=0;i< data.features.length; i++){
+    mag = []
+    for (var i = 0; i < data.features.length; i++) {
 
         mag.push(data.features[i].properties.mag)
-}
-console.log(d3.max(mag))
-console.log(d3.min(mag))
+    }
+    console.log(d3.max(mag))
+    console.log(d3.min(mag))
 
     L.geoJson(data, {
-        
+
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
                 radius: 8,
@@ -94,42 +101,36 @@ console.log(d3.min(mag))
     }).addTo(myMap)
     var legend = L.control({ position: "bottomright" });
 
-    legend.onAdd = function(map) {
-    var div = L.DomUtil.create("div", "legend");
-    div.innerHTML += "<h4>Earthquake Depth</h4>";
-    div.innerHTML += '<i style="background: green"></i><span>-10-10</span><br>';
-    div.innerHTML += '<i style="background: yellow"></i><span>10-30</span><br>';
-    div.innerHTML += '<i style="background: orange"></i><span>30-50</span><br>';
-    div.innerHTML += '<i style="background: brown"></i><span>50-70</span><br>';
-    div.innerHTML += '<i style="background: purple"></i><span>70-90</span><br>';
-    div.innerHTML += '<i style="background: red"></i><span>+90</span><br>';
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "legend");
+        div.innerHTML += "<h4>Earthquake Depth</h4>";
+        div.innerHTML += '<i style="background: green"></i><span>-10-10</span><br>';
+        div.innerHTML += '<i style="background: yellow"></i><span>10-30</span><br>';
+        div.innerHTML += '<i style="background: orange"></i><span>30-50</span><br>';
+        div.innerHTML += '<i style="background: brown"></i><span>50-70</span><br>';
+        div.innerHTML += '<i style="background: purple"></i><span>70-90</span><br>';
+        div.innerHTML += '<i style="background: red"></i><span>+90</span><br>';
 
 
-    return div;
+        return div;
     };
 
     legend.addTo(myMap);
 
 })
-platesUrl="https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
+platesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 
 var mapStyle = {
     color: "yellow",
-    // fillColor: "white",
     fillOpacity: 0,
     weight: 3
-  };
-  
-d3.json(platesUrl,function(data){
-    console.log("plates",data)
-    tectonic=data.features[0].geometry.coordinates
-    console.log(tectonic)
+};
 
-    // for(var i=0;i<tectonic.length; i++){
-    //     tect=tectonic[i]
-    // console.log(tect)
-    L.geoJson(data,{style: mapStyle}).addTo(myMap)
-    
+d3.json(platesUrl, function (data) {
+    markers = L.markerClusterGroup();
+    console.log("plates", data)
+    markers.addLayer(L.geoJson(data, { style: mapStyle }))
+    myMap.addLayer(markers)
 })
 
 
