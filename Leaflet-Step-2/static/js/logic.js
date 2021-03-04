@@ -32,7 +32,7 @@ function createMap(tect, earthquake) {
     }
     overlayMap = {
         "Earthquake": earthquake,
-        "Tectonic Plates":tect
+        "Tectonic Plates": tect
     }
 
     // Creating map object
@@ -49,26 +49,25 @@ function createMap(tect, earthquake) {
         collapsed: false
     }).addTo(myMap)
 
-    d3.json(geoUrl, function (data) {
-        var legend = L.control({ position: "bottomright" });
-    
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create("div", "legend");
-            div.innerHTML += "<h4>Earthquake Depth</h4>";
-            div.innerHTML += '<i style="background: green"></i><span>(-10)-10</span><br>';
-            div.innerHTML += '<i style="background: yellow"></i><span>10-30</span><br>';
-            div.innerHTML += '<i style="background: orange"></i><span>30-50</span><br>';
-            div.innerHTML += '<i style="background: brown"></i><span>50-70</span><br>';
-            div.innerHTML += '<i style="background: purple"></i><span>70-90</span><br>';
-            div.innerHTML += '<i style="background: red"></i><span>+90</span><br>';
-    
-    
-            return div;
-        };
-    
-        legend.addTo(myMap);
-    })
-    
+    var legend = L.control({ position: "bottomright" });
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "legend");
+        div.innerHTML += "<h4>Earthquake Depth</h4>";
+        div.innerHTML += '<i style="background: green"></i><span>(-10)-10</span><br>';
+        div.innerHTML += '<i style="background: yellow"></i><span>10-30</span><br>';
+        div.innerHTML += '<i style="background: orange"></i><span>30-50</span><br>';
+        div.innerHTML += '<i style="background: brown"></i><span>50-70</span><br>';
+        div.innerHTML += '<i style="background: purple"></i><span>70-90</span><br>';
+        div.innerHTML += '<i style="background: red"></i><span>+90</span><br>';
+
+
+        return div;
+    };
+
+    legend.addTo(myMap);
+
+
 }
 
 // earthquake json file for last 7 days 
@@ -122,7 +121,7 @@ function geojsonMarkerRadius(mag) {
 
 // using d3 lib to put the data in the function 
 function createCircleMarker() {
-    let circles=new L.FeatureGroup();
+    let circles = new L.FeatureGroup();
     d3.json(geoUrl, function (data) {
         // loop to know max and min magnitude 
         mag = []
@@ -151,13 +150,11 @@ function createCircleMarker() {
                 return circle;
             }
         }).addTo(circles);
-        
+
     });
     console.log(circles);
     return circles;
 }
-d3.json
-
 
 platesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 
@@ -167,7 +164,7 @@ var mapStyle = {
     weight: 3
 };
 function createTectonicMarker() {
-    tectonic=new L.FeatureGroup();
+    tectonic = new L.FeatureGroup();
     d3.json(platesUrl, function (tect) {
         console.log("plates", tect)
 
