@@ -104,14 +104,14 @@ console.log(d3.min(mag))
     div.innerHTML += '<i style="background: purple"></i><span>70-90</span><br>';
     div.innerHTML += '<i style="background: red"></i><span>+90</span><br>';
 
-    div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+    // div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
     
     
 
     return div;
     };
 
-    legend.addTo(map);
+    legend.addTo(myMap);
 
 })
 
