@@ -12,13 +12,11 @@ function createMap(tect, earthquake) {
     })
 
     // create gray scale layer that one was for old computers and put class with style for background 
-    // grayLayer = L.tileLayer.grayscale('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //     attribution: 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
-    //     maxZoom: 18,
-    //     minZoom: 2,
-    //     className: "leaflet-tile-pane"
-    // })
-
+    grayLayer = L.tileLayer.grayscale('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 14,
+        minZoom: 2,
+    })
     //using google satlite layer
     satelliteLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         maxZoom: 18,
@@ -27,7 +25,7 @@ function createMap(tect, earthquake) {
 
     baseLayer = {
         "Satellite": satelliteLayer,
-        // "GrayScale":grayLayer,
+        "Grayscale": grayLayer,
         "Outdoors": lightLayer
     }
     overlayMap = {
@@ -145,7 +143,7 @@ function createCircleMarker() {
                     opacity: 1,
                     fillOpacity: 0.8,
                     radius: geojsonMarkerRadius(feature.properties.mag)
-                    // put tootips once click on circles 
+                    // put tooltips once click on circles 
                 }).bindPopup(`<h3> Location: ${feature.properties.place}</h3><br><h4>Magnitude: ${feature.properties.mag}</h4><br><h4>Depth Of Earthquake: ${feature.geometry.coordinates[2]}</h4>`)
                 return circle;
             }
